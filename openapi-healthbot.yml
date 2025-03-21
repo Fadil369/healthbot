@@ -1,0 +1,71 @@
+openapi: 3.0.1
+info:
+  title: Azure Health Insights - Clinical Trial Matcher
+  description: Azure Health Insights API's that can run Trial Matcher
+  version: v1
+servers:
+  - url: https://clinicaltrial-contoso.com
+paths:
+  /ClinicalTrialMatcherPlugin:
+    get:
+      summary: 'This OpenAPI plugin helps users find healthcare clinical trials tailored to their needs. It requires the patient''s age and the targeted condition or disease they wish to address with a trial. Optionally, it can consider the patient''s gender, the country where the trial is conducted, and any pre-existing medical conditions or current medications. If the optional parameters are not provided, they will not be prompted for.'
+      description: 'This OpenAPI plugin helps users find healthcare clinical trials tailored to their needs. It requires the patient''s age and the targeted condition or disease they wish to address with a trial. Optionally, it can consider the patient''s gender, the country where the trial is conducted, and any pre-existing medical conditions or current medications. If the optional parameters are not provided, they will not be prompted for.'
+      operationId: ClinicalTrialsPlugin
+      parameters:
+        - name: age
+          in: query
+          description: The age of the patient who is seeking to participate in the clinical trial. This parameter is required.
+          required: true
+          schema:
+            type: string
+        - name: targetedConditionForTrial
+          in: query
+          description: The specific condition or disease for which the patient is seeking clinical trial. This parameter is required.
+          required: true
+          schema:
+            type: string
+        - name: gender
+          in: query
+          description: The gender of the patient seeking to participate in the trial. Acceptable values are 'male' or 'female'. This parameter is required.
+          required: true
+          schema:
+            type: string
+        - name: country
+          in: query
+          description: The country where the clinical trial is being conducted. This parameter is optional. Do not ask if not provided
+          schema:
+            type: string
+        - name: historicalConditions
+          in: query
+          description: Any optional pre-existing medical conditions the patient has or medications the patient is currently taking. This parameter is optional. Do not ask if not provided
+          schema:
+            type: string
+      responses:
+        '200':
+          description: found clinical trials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/foundTrials'
+components:
+  schemas:
+    contact:
+      type: object
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+        phone:
+          type: string
+    foundTrials:
+      type: object
+      properties:
+        trialUrl:
+          type: string
+        trialDescription:
+          type: string
+        trialContact:
+          $ref: '#/components/schemas/contact'
+        trialSponsor:
+          type: string
